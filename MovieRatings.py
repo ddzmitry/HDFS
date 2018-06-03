@@ -1,5 +1,7 @@
 from mrjob.job import MRJob
 from mrjob.step import MRStep
+counter = {}
+
 
 class RatingsBreakdown(MRJob):
     def steps(self):
@@ -22,6 +24,8 @@ class RatingsBreakdown(MRJob):
     def reducer_sorted_output(self,count,movies):
         for movie in movies:
             # return movie and its count
+            movie = str(movie)
+            count = int(count)
             yield movie,count
 
 if __name__ == '__main__':
