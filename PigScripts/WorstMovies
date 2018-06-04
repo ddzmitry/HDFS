@@ -1,0 +1,22 @@
+ratings = LOAD '/ml-100k/u.data' AS (userID:int, movieID:int, rating:int, ratingTime:int);
+
+metadata = LOAD '/ml-100k/u.item' USING PigStorage('|')
+	AS
+    (movieID:int, movieTitle:chararray, releaseDate:chararray, videoRelease:chararray, imdbLink:chararray);
+
+nameLookup = FOREACH metadata GENERATE movieID, movieTitle, ToUnixTime(ToDate(releaseDate,'dd-MMM-yyyy'))
+	AS releaseTime;
+
+raitingsByMovie = GROUP ratings BY movieID;
+
+avgRatings = FOREACH raitingsByMovie GENERATE group AS movieID, AVG(ratings.rating) AS avgRating,
+COUNT(ratings.rating) as numRatings;
+
+BadMovies = FILTER avgRatings BY avgRating < 2.0;
+NamesBadMovies = JOIN BadMovies BY movieID, nameLookup BY movieID;
+
+finalRes = FOREACH NamesBadMovies GENERATE nameLookup::movieTitle AS movieName,
+	BadMovies::avgRating AS avgRating, BadMovies::numRatings AS numRatings;
+
+finalResScore = ORDER finalRes BY numRatings DESC;
+DUMP finalResScore;
