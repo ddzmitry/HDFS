@@ -53,7 +53,7 @@ __Target table must already exist in MySQL,with columns and expected order__
 Hortonworks for mySQL
 mysql -u root -p 
 pw hadoop
-SET names 'utf8';
+SET names 'utf8';`
 SET CHARACTER SET utf8;
 ### ADD Permisiions to DB
 __GRANT ALL PRIVILEGES ON movielens.* to ''@'localhost';__
@@ -65,6 +65,20 @@ sqoop import --connect jdbc:mysql://localhost/movielens --driver com.mysql.jdbc.
 __sqoop export --connect jdbc:mysql://localhost/movielens -m 1 --driver com.mysql.jdbc.Driver --table exported_movies 
 --export-dir /aps/hive/warehouse/movies --input-fields-te rminated-by '\0001'__
 ### HBASE
- 
+__login as root__
+__/usr/hdp/current/hbase-master/bin/hbase-daemon.sh start rest -p 8000 --infoport 8001__
+__/usr/hdp/current/hbase-master/bin/hbase-daemon.sh stop rest__
+__importtsv__ -> to import big scale data
+##### HBASE shell with Pig
+hbase shell
+create userstable with userinfo family in it
+create 'users' ,'userinfo'
+__pig PigScripts/hbase.pig'__
+It creates table userId : {'userinfo:age,userinfo:gender,userinfo:occupation,userinfo:zip'}
+__scan users -> displays table__
+
+###### To drop table in HBASE firs you have to disable it
+disable 'users'
+
 
  
