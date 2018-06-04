@@ -1,84 +1,110 @@
 #### putty login
-_ssh user@127.0.0.1 -p 2222_
++ _ssh user@127.0.0.1 -p 2222_
 #### see HDFS file system
-_hadoop fs -ls_
++ _hadoop fs -ls_
 #### make a directory
-_hadoop fs -mkdir <name>_
++ _hadoop fs -mkdir <name>_
 #### Lookup Files
-_hadoop fs -ls_
++ _hadoop fs -ls_
 #### add to hadoop from Linux server
-_hadoop fs -copyFromLocal <name>_
-_hadoop fs -copyFromLocal <name> <locationFolder>/<name>_
++ _hadoop fs -copyFromLocal <name>_
++ _hadoop fs -copyFromLocal <name> <locationFolder>/<name>_
 #### remove data from hadoop cluster
-_hadoop fs -rm <folder>/<file>_
++ _hadoop fs -rm <folder>/<file>_
 #### remove directory 
-_hadoop fs -rmdir  <dir>_
++ _hadoop fs -rmdir  <dir>_
 #### run python script
-__python <name>.py -r hadoop --hadoop-streaming-jar /usr/hdp/current/hadoop-mapreduce-client/hadoop-streaming.jar <dataset>__
++ __python <name>.py -r hadoop --hadoop-streaming-jar /usr/hdp/current/hadoop-mapreduce-client/hadoop-streaming.jar <dataset>__
 
 #### PigScript (Examples)
-__/PigScripts__
++ __/PigScripts__
 
 #### PySpark
-__Installation__
++ __Installation__
 #### RunScript
-__spark-submit <name>.py__
++ __spark-submit <name>.py__
 #### Shell Access
-Start with sbin/start-thriftserver.sh
-Listens on port 10000 by default
-Connect using bin/beeline -u jdbc:hive2://localhost:10000
-__Query existing Tables hiveCtx.cacheTable("tablename");__
++ Start with sbin/start-thriftserver.sh
++ >_Listens on port 10000 by default_
++ Connect using bin/beeline -u jdbc:hive2://localhost:10000
++ __Query existing Tables hiveCtx.cacheTable("tablename");__
 #### SET SPARK 2 as enviroment
-export SPARK_MAJOR_VERSION=2
++ export SPARK_MAJOR_VERSION=2
 #### Hive 
 __/HiveQueries__
 ##### To save query
-hive -f /somepath/queries.hql
++ hive -f /somepath/queries.hql
 
 #### Sqoop
-sqoop import --connect jdbc:mysql://localhost/movielends --driver
-com.mysql.jdbc.Driver --table movies
+_sqoop import --connect jdbc:mysql://localhost/movielends --driver
+com.mysql.jdbc.Driver --table movies_
 ##### Import data from MySQL directly 
-sqoop import --connect jdbc:mysql://localhost/movielens --driver
-com.mysql.jdbc.Driver --table movies
+_sqoop import --connect jdbc:mysql://localhost/movielens --driver
+com.mysql.jdbc.Driver --table movies_
 ##### Incremental Import
---check-column and --last-value
+_--check-column and --last-value_
 ##### Export from HIVE to MySQL
-sqoop export --connect jdbc:mysql://localhost/movielens -m 1 --driver
+_sqoop export --connect jdbc:mysql://localhost/movielens -m 1 --driver
 com.mysql.jdbc.Driver --table exported_movies --export-dir
-/apps/hive/warehouse/movies --input-fields-terminated-by '\0001'
-__Target table must already exist in MySQL,with columns and expected order__
+/apps/hive/warehouse/movies --input-fields-terminated-by '\0001'_
+
++ **__Target table must already exist in MySQL,with columns and expected order__**
 
 ### Work with Mysql
-Hortonworks for mySQL
-mysql -u root -p 
-pw hadoop
-SET names 'utf8';`
-SET CHARACTER SET utf8;
+**Hortonworks for mySQL**
++ mysql -u root -p 
++ pw hadoop
++ SET names 'utf8';`
++ SET CHARACTER SET utf8;
 ### ADD Permisiions to DB
 __GRANT ALL PRIVILEGES ON movielens.* to ''@'localhost';__
 #### sending data to HDFS
-sqoop import --connect jdbc:mysql://localhost/movielens --driver com.mysql.jdbc.Driver --table movies -m 1
++ sqoop import --connect jdbc:mysql://localhost/movielens --driver com.mysql.jdbc.Driver --table movies -m 1
 #### sending data to HIVE
-sqoop import --connect jdbc:mysql://localhost/movielens --driver com.mysql.jdbc.Driver --table movies -m 1 --hive-import
++ sqoop import --connect jdbc:mysql://localhost/movielens --driver com.mysql.jdbc.Driver --table movies -m 1 --hive-import
 #### scoop -> Hive ->  to MySQL
-__sqoop export --connect jdbc:mysql://localhost/movielens -m 1 --driver com.mysql.jdbc.Driver --table exported_movies 
++ __sqoop export --connect jdbc:mysql://localhost/movielens -m 1 --driver com.mysql.jdbc.Driver --table exported_movies 
 --export-dir /aps/hive/warehouse/movies --input-fields-te rminated-by '\0001'__
 ### HBASE
-__login as root__
-__/usr/hdp/current/hbase-master/bin/hbase-daemon.sh start rest -p 8000 --infoport 8001__
-__/usr/hdp/current/hbase-master/bin/hbase-daemon.sh stop rest__
-__importtsv__ -> to import big scale data
++ __login as root__
++ __/usr/hdp/current/hbase-master/bin/hbase-daemon.sh start rest -p 8000 --infoport 8001__
++ __/usr/hdp/current/hbase-master/bin/hbase-daemon.sh stop rest__
++ __importtsv__ -> to import big scale data
 ##### HBASE shell with Pig
-hbase shell
-create userstable with userinfo family in it
-create 'users' ,'userinfo'
-__pig PigScripts/hbase.pig'__
-It creates table userId : {'userinfo:age,userinfo:gender,userinfo:occupation,userinfo:zip'}
-__scan users -> displays table__
++ hbase shell
++ create userstable with userinfo family in it
++ create 'users' ,'userinfo'
++ __pig PigScripts/hbase.pig'__
++ It creates table userId : {'userinfo:age,userinfo:gender,userinfo:occupation,userinfo:zip'}
++ __scan users -> displays table__
 
 ###### To drop table in HBASE firs you have to disable it
 disable 'users'
+drop 'users'
 
-
+ #### Cassandra
+ To install have to update Yum
+ + yum update
+ + yum install scl-utils (to run dif versions of python)
+ + yum install centos-release-SCL (allows to switch between versions of python)
+ + yum install python27
+ + scl enable python27 bash
  
+ `add directory in /etc/yum.repos.d/
+  vim datastacks.repo
+  -Text-
+  >name = DataStax Repo for Apache Cassandra
+  >baseurl = http://rpm.datastax.com/community
+  >enable = 1
+  >gpgcheck = 0
+ `
+ + yum install dsc30
+ + pip install cqlsh
+ + __service cassandra start__
+ + cqlsh --cqlversion="3.4.0"
+ >`Uses Gossip Protocol every node does the same function and talking to each other and replecate itself`
+ >__!NO JOINS!USES CQL!__
+ Create keyspace 
+ + _CREATE KEYSPACE movielens WITH replication = {'class' : 'SimpleStrategy', 'replication_factor':'1'} AND durable_writes = true;_
+ + USE movielens
+ + _CREATE TABLE users (user_id int , age int , gender text , occupation text, PRIMARY KEY (user_id))_
