@@ -9,3 +9,12 @@ STORED AS TEXTFILE;
 
 LOAD DATA LOCAL INPATH `${env:HOME}/ml-100k/u.data`
 OVERWRITE INTRO TABLER ratings;
+
+#CREATE TABLE WITH PARTITIONS
+
+CREATE TABLE customers (
+    name STRING,
+    address STRUCT <street:STRING,city:STRING,state:STRING,zip:INT>
+
+)
+PARTITIONED BY (country STRING);
