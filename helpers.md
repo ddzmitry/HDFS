@@ -92,7 +92,7 @@ drop 'users'
  
  `add directory in /etc/yum.repos.d/
   vim datastacks.repo
-  -Text-
+   **-Text-**
   >name = DataStax Repo for Apache Cassandra
   >baseurl = http://rpm.datastax.com/community
   >enable = 1
@@ -107,4 +107,8 @@ drop 'users'
  Create keyspace 
  + _CREATE KEYSPACE movielens WITH replication = {'class' : 'SimpleStrategy', 'replication_factor':'1'} AND durable_writes = true;_
  + USE movielens
- + _CREATE TABLE users (user_id int , age int , gender text , occupation text, PRIMARY KEY (user_id))_
+ + _CREATE TABLE users (user_id int , age int , gender text , occupation text, zip text, PRIMARY KEY (user_id))_
+ > To run actuall spark with cassandra we need to set up version spark to version 2 
+ > as well we have to rout script to use cassandra --driver to execute spark script
+ + **spark-submit --packages datastax:spark-cassandra-connector:2.0.0-M2-s_2.11 CassandraSpark.py**
+#### Mongo DB and HDFS 
