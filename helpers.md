@@ -91,8 +91,8 @@ drop 'users'
  + scl enable python27 bash
  
  `add directory in /etc/yum.repos.d/
-  vim datastacks.repo
-   **-Text-**
+  vim datastacks.repo`
+  
   >name = DataStax Repo for Apache Cassandra
   >baseurl = http://rpm.datastax.com/community
   >enable = 1
@@ -112,3 +112,18 @@ drop 'users'
  > as well we have to rout script to use cassandra --driver to execute spark script
  + **spark-submit --packages datastax:spark-cassandra-connector:2.0.0-M2-s_2.11 CassandraSpark.py**
 #### Mongo DB and HDFS 
+ _Installing on Ambari (connector is already exists)_
+ + cd /var/lib/ambari-server/resources/stacks/HDP/2.5/services
+ + Get connector FOR MONGO git clone https://github.com/nikunjness/mongo-ambari.git
+ + sudo service ambari restart
+ + login in ambari as admin add mongo as a service
+ + install pymongo
+ + export SPARK_MAJOR_VERSION=2
+ + __When running script make sure ro specify versions scala(2.11)/spark(2.0.0)__
+ + spark-submit --packages org.mongodb.spark:mongo-spark-connector_2.11:2.0.0 MongoSpark.py
+ * Setting index in mongo_db will make it faster 
+ + *Example of aggregation:* _db.users.aggregate([{ $group: { _id: { occupation: "$occupation"}, avgAge: { $avg: "$age"}}}])_
+
+ 
+ 
+ 
