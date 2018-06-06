@@ -1,4 +1,4 @@
-from pyspark import SparkConf, SparkContext
+from PySpark import SparkConf, SparkContext
 # This function just creates a Python "dictionary" we can later
 # use to convert movie ID's to movie names while printing out
 # the final results.

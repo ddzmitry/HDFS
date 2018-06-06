@@ -123,7 +123,68 @@ drop 'users'
  + spark-submit --packages org.mongodb.spark:mongo-spark-connector_2.11:2.0.0 MongoSpark.py
  * Setting index in mongo_db will make it faster 
  + *Example of aggregation:* _db.users.aggregate([{ $group: { _id: { occupation: "$occupation"}, avgAge: { $avg: "$age"}}}])_
+#### Apache Drill (queringg HDFS using SQL )
+ > Installation 
+ + Download from mirror
+ + wget it
+ + tar -xvf 
+ + bin/drillbit.sh start -Ddrill.exec.http.port=8765 (specified port)
+ + Check Settings in apacheDrill
+ + bin/drillbit.sh stop
+#### Apache Phoenix (only for HBASE)
+**Better optimization then ( Drill or MySQL) on HBASE**
+   >Installation 
++ yum install phoenix
+    > Use
++ cd /usr/hdp/current/phoenix-client/
++ cd bin
++ python sqline.py
++ !tables -> NO inserts USE upsert;
+#### Presto 
+ >Installation
+ + web site docs get latest tarball
+ + tar -xvf cd presto/bin/
+ + CREATE YOUR OWN CONFIGS
+ + go to bin abd get command line interface (from website) rename it to presto
+ + chmod +x presto (add executable option)
+ + bin/launcher start
+ + connect to *CLI bin/presto --server 127.0.0.1:8090 --catalog hive,cassandra*
+ + _to run Presto with cassandra we need thrift server_ !run cassandra! then nodetool enablethrift 
+#### YARN Yet Another Resource Negotiator
+ + Sits on top of HDFS
+ + Split computation around cluster 
+ + Maintains Data locality 
+ + Allows SPARK, MR to be executed  on it 
+ + HDFS -> Client Node -> YARN -> Node Manager(MR app master)
+ + Monolithic Scheduler
+#### MESOS Another resource negotiator
+ + Came from Twitter (Takes intere pull of hardware)
+ + Meant to solve a more general problem than YARN
+ + Two Teared System (Google, Tweeter)
+ + Uses Kuberentes / Docker
+ + But YARN still better on HDFS because YARN negotiate bigger process betrween small ones 
+ + MESOS can be working together with YARN 
+ _"Hadoop on Mesos" package for Cloudera_
+ #### ZooKeeper
+ + Keeps track of information that must be synchronized across your luster
+    **-Which Node is master?**
+    **-What tasks are assigned to which workers?**
+    **-Which workers are currently avaliable?**
+ + ZooKeeper API Create,Delete,Existss,setData, getChildren
+ + has to be at least 3-5 Zookeeper servers in ensemble 
+     */
+    |
+    |_____/master (z Node ) "master1.foobar:2223"
+    |
+    |___/ worker
+                |
+                |
+                |_worker1
+                |
+                |_worker2*
+                
+    + _cd /usr/hdp/current/zookeeper-client/bin/zkCli.sh_
 
- 
+  
  
  
