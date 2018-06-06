@@ -184,7 +184,40 @@ drop 'users'
                 |_worker2*
                 
     + _cd /usr/hdp/current/zookeeper-client/bin/zkCli.sh_
+    + (creating z node) create -e /testmaster "127.0.0.1:2225"
+    *under that z node you can store any .bin file*
+    + get /testmaster
+#### Oozie
++ Manages periodic Jobs that run on cluster
++ Uses XML code to create job on HDFS
++ oozie job --oozie http://localhost:11000/oozie -config <path to config>
++ Oozie Coordinators 
+> Installation
++ wget/create workflow.xml
++ we have to upload  workflow.xml to hadoop to be able to run it from job.properties
++ hadoop fs -put workflow.xml /user/<username>
++ we also have to put all scripts in directory within the workflow.xml
++ hadoop fs -put Oozie/oldmovies.sql /user/maria_dev
++ to run SQL with Oozie we also have to put connector into scoop file on HDFS
++ hadoop fs -put /usr/share/java/mysql-connector-java.jar /user/oozie/share/lib/lib_20161025075203/sqoop
++ restart oozie
+*run oozie job script from cli on where oozie runs and config that stored localy*
++ oozie job --oozie http://localhost:11000/oozie -config /home/maria_dev/job.properties -run
+#### Apache Zeppelin
++ Interractivly rin scripts against of your data
++ Works well with Apache Spark
++ Integrated with Spark SQl
++ 9995 port SCALA language
+#### HUE Hadoop User Enterface
+#### Flume and Kafka Streaming technologies
++ /usr/hdp/current/kafka-broker/
++ *create topic* ./kafka-topics.sh --create --zookeeper sandbox.hortonworks.com:2181 --replication-factor 1 --partitions 1 --topic fred
++ *show all topics* ./kafka-topics.sh --list --zookeeper sandbox.hortonworks.com:2181 
++ *to produce* ./kafka-console-producer.sh --broker-list sandbox.hortonworks.com:6667 --topic fred
++ *to listern*./kafka-console-consumer.sh --bootstrap-server sandbox.hortonworks.com:6667 --zookeeper localhost:2181 --topic fred --from-beginning
 
-  
+
  
+
+
  
