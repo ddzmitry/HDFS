@@ -209,15 +209,32 @@ drop 'users'
 + Integrated with Spark SQl
 + 9995 port SCALA language
 #### HUE Hadoop User Enterface
-#### Flume and Kafka Streaming technologies
+#### Kafka Streaming technologies
 + /usr/hdp/current/kafka-broker/
 + *create topic* ./kafka-topics.sh --create --zookeeper sandbox.hortonworks.com:2181 --replication-factor 1 --partitions 1 --topic fred
 + *show all topics* ./kafka-topics.sh --list --zookeeper sandbox.hortonworks.com:2181 
 + *to produce* ./kafka-console-producer.sh --broker-list sandbox.hortonworks.com:6667 --topic fred
 + *to listern*./kafka-console-consumer.sh --bootstrap-server sandbox.hortonworks.com:6667 --zookeeper localhost:2181 --topic fred --from-beginning
-
-
- 
-
-
+##### Kafka connector
++ /usr/hdp/current/kafka-broker/conf
++ in connect-standalone *change bootstrap servers on appropriate one*
++ in connect-file-sink  *change file path where it will store logs and topic*
++ in connect-file-source *change file where we get data from and topic_name*
++ _RUN CONSUMER_ ./kafka-console-consumer.sh --bootstrap-server sandbox.hortonworks.com:6667 --topic log-test --zookeeper localhost:2181
++ _RUN IT!_./connect-standalone.sh ~/Project/connect-standalone.properties ~/Project/connect-file-source.properties ~/Project/connect-file-sink.properties
+####  Flume
++ Source -> Channel -> Sink
++ bin/flume-ng agent --conf conf --conf-file ~/example.conf --name a1 -Dflume.root.logger=INFO,console
++ *In another console* you can set up telnet console and type 
++ File flume.conf that monitors files that were added in folder is /Flume folder
+#### Spark Streaming with Flume
++ */SparkStreaming*
++spark-submit --packages org.apache.spark:spark-streaming-flume_2.11:2.0.0
++cd /usr/hdp/current/flume-server/
++bin/flume-ng agent --conf conf --conf-file ~/example.conf --name a1
+#### Apache Storm 
++ Storm/Kafka stack wisely used with JAVA
++cd /usr/hdp/current/storm-client
+_Example_
++/usr/hdp/current/storm-client/contrib/storm-starter/src/jvm/org/apache/storm
  
