@@ -1,5 +1,5 @@
 #Linux command line tips
-
++ *To Open Port* _netstat -tupln | grep :22_
 #### Tar Files
 + *create tar* tar-c 
 + *create tar with name* tar -cf name.tar folder
@@ -38,6 +38,22 @@ _Sort will sort Alphabeticly_
 _Word,Line Count_
 + wc -lw
 ### Pipes and RegEX
-
-
-
++ grep pattern file
++ grep -i case insensitive
++ grep -i string filename.txt | less `>` Will open found lines with less
+*Word Count*
++ grep -i string filename.txt | wc -w
+##### _Regex_
+*Beginning of the string*
++grep -i '^string' filename 
+*End of the string*
++grep -i 'republic$' republic_plato.txt
+*Lines That start with needed characters*
++grep '^[AaBv]' republic_plato.txt
+*Lines that do not start _Double carrot negates_*
++grep '^[^AaBv]' republic_plato.txt
+*Using Whild Cards `.` any char *
++ grep '^.[h]' republic_plato.txt
++ grep 'www*'
+*Word Boundary*
++ grep '\bwww\b' republic_plato.txt
