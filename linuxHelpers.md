@@ -45,13 +45,13 @@ _Word,Line Count_
 + grep -i string filename.txt | wc -w
 ##### _Regex_
 *Beginning of the string*
-+grep -i '^string' filename 
++ grep -i '^string' filename 
 *End of the string*
-+grep -i 'republic$' republic_plato.txt
++ grep -i 'republic$' republic_plato.txt
 *Lines That start with needed characters*
-+grep '^[AaBv]' republic_plato.txt
++ grep '^[AaBv]' republic_plato.txt
 *Lines that do not start _Double carrot negates_*
-+grep '^[^AaBv]' republic_plato.txt
++ grep '^[^AaBv]' republic_plato.txt
 *Using Whild Cards `.` any char *
 + grep '^.[h]' republic_plato.txt
 + grep 'www*'
