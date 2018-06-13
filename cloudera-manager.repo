@@ -1,0 +1,6 @@
+[cloudera-manager]
+name=cloudera-manager
+baseurl = http://ip-address/cm/5.14.1/
+enabled=1
+gpgcheck=0
+gpgfile =  http://ip-address/cm/RPM-GPG-KEY-cloudera
