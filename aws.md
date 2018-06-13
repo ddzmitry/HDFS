@@ -30,7 +30,19 @@
 + Spin up 3 more server boxes from AMIs and add them to hosts in Cloudera management
 + Make sure to set properly Inbound and Outbound traffic
 + use .pem file to provide all root access to nodes 
++`sudo -u hdfs hdfs dfsadmin -safemode leave`
 + `Cloudera recommends setting /proc/sys/vm/swappiness to a maximum of 10. Current setting is 60. Use the sysctl command to change this setting at run time and edit /etc/sysctl.conf for this setting to be saved after a reboot. You can continue with installation, but Cloudera Manager might report that your hosts are unhealthy because they are swapping. The following hosts are affected:`
 + `Transparent Huge Page Compaction is enabled and can cause significant performance problems. Run "echo never > /sys/kernel/mm/transparent_hugepage/defrag" and "echo never > /sys/kernel/mm/transparent_hugepage/enabled" to disable this, and then add the same command to an init script such as /etc/rc.local so it will be set on system reboot. The following hosts are affected:`
 #### Manually installing cloudera with apache
-
++ > Important Steps 
++ image ami-8997afe0 30gb (CentOS 6.5)
++ Open Ports
++ Disable selinux `vim /etc/selinux/config SELINUX=disabled`
++ Turn off IP tables `service iptables stop`  _and_ `chkconfig iptables off` to make sure service will be off once system is rebooted
++ Resize hard disc so it can recalcuilate actuall space (df -h) `resize2fs /dev/xvde`
++ Change (swappiness) `cat /proc/sys/vm/swappiness` `=>` `echo "vm.swappiness=1" >> /etc/sysctl.conf`
+ 
++ > Creating Server Box
++ Spin UP CentOS box
++ yum -y install httpd
++ chkconfig httpd on *have it running at all the time*
