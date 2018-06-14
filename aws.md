@@ -2,19 +2,19 @@
 + yum -y update _(update all packages)_
 + yum -y install mysql-server mysql-connector-java _(install connector and install server)_
 + *to check status of mySql instance* _service mysqld status_
-+ *to start service of mySQL* _service mysql start_
++ *to start service of mySQL* _service mysqld start_
 + *to start service every time when starting up the system* chkconfig mysqld on 
 + `/usr/bin/mysql_secure_installation` run secure installation
 + *login from localhost* mysql -u root -h localhost -p
-+ create user 'temp'@'%' identified by 'password123';
-+ grant all privileges on *.* to 'temp'@'%' with option;
++ `create user 'temp'@'%' identified by 'password123'`;
++ `grant all privileges on *.* to 'temp'@'%' with grant option;`;
 + __then you can log in as temp__
 + mysql -u temp -h localhost -p
 + _To see firewall_ *service iptables status*
 + _To stop firewall_ *service iptables stop*
 + _To make sure that firewall off every time when restart server_ chkconfig iptables off
 + iptables --flush
-#### Installing Cloudera
+#### Installing Cloudera 
 + wget http://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin
 + chmod u+x cloudera-manager-installer.bin
 + make sure SeLinux is disabled `getenforce`
@@ -85,3 +85,47 @@
 + yum makecache
 + yum list all | grep cloudera (To ensure that repo is avaliable)
 + _NOW WE CAN CREATWE AN IMAGE!!!!_
+
+#### Cloudera Manager installation from box with repo
++ yum -y install mysql-connector-java (To Connect to DB service)
++ yum -y install mariadb-server mariadb (MySQL server)
++ Make sure you have another box with mySQL installed
++ mysql -u 'temp' -h 'ip-address' -p (To check connection)
++ `yum -y install cloudera-manager-agent.x86_64 cloudera-manager-daemons.x86_64 cloudera-manager-server.x86_64 oracle-j2sdk1.7.x86_64`
++ add config in `/etc/default/cloudera-scm-server`
++ export JAVA_HOME=/usr/java/jdk1.7.0_67-cloudera/
++ cd /usr/share/cmf/schema/
++ `make sure that there is scm user created in databases befor running next step`
++ /usr/share/cmf/schema/scm_prepare_database.sh mysql -hMY_SQL_SERVER.com -utemp -ppassword123 --scm-host CLOUDERA_MANAGER_HOST.com scm scm scm (user,database,password)
++ /etc/cloudera-scm-agent 'Change server_host on appropriate one *the server where agent is running*'
++ `service cloudera-scm-server start`
++ chkconfig cloudera-scm-server on
++ `service cloudera-scm-agent start`
++ chkconfig cloudera-scm-agent on
++ port 7180 
+#### Adding agents to current cloudera manager
++ spin up 3 more AMIs with all prerequisites done `For CentOS7 AMI`
++ Login into Workers
++ sudo su
++ yum -y install cloudera-manager-agent.x86_64 cloudera-manager-daemons.x86_64 oracle-j2sdk1.7.x86_64
++ cd /etc/default/
++ vim cloudera-scm-agent 'set $JAVA_HOME=/usr/java/jdk1.7.0_67-cloudera/'
++ export JAVA_HOME=/usr/java/jdk1.7.0_67-cloudera/
++ vim /etc/cloudera-scm-agent/config.ini
++ _Change Host on which one cloudera manager is running_
++ `service cloudera-scm-agent start`
++ chkconfig cloudera-scm-agent on
++ go to :7180/cmf/express-wizard/hosts (select 3 except the manager one)
++ for parcels  link add the one we created on httd server
+#### Creating Databases (for reportmanager,hue,hive,oozie)
++ create database hue;
++ create user 'hue'@'%' identified by 'password123';
++ grant all privileges on hue.* to 'hue'@'%';
+
++ create database hive;
++ create user 'hive'@'%' identified by 'password123';
++ grant all privileges on hive.* to 'hive'@'%';
+
++ create database oozie;
++ create user 'oozie'@'%' identified by 'password123';
++ grant all privileges on oozie.* to 'oozie'@'%';
