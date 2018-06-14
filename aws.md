@@ -129,3 +129,20 @@
 + create database oozie;
 + create user 'oozie'@'%' identified by 'password123';
 + grant all privileges on oozie.* to 'oozie'@'%';
+
++ Go back to console and finish install as well as provide host for database
++ IF ERROR `JDBC driver cannot be found. Unable to find the JDBC database jar on host : ip-172-31-44-90.ec2.internal.
+`
++ Go to that server and `yum -y install mysql-connector-java`
+
+#### HDFS Commands
++ Make sure JAVA_HOME is set and JAVA_HOME/bin is in the $PATH
++ Can run from any box you are currently on
++ su hdfs (*will make you as a users of hdfs*)
++ hdfs dfs 
++ `hdfs dfs -put test.txt /test.txt` - To put Files
++ `hdfs dfs -ls /` - To List Files 
++ `hdfs dfs -setrep 2 /test.txt` - To set replecations on file
++ `hdfs fsck / -files -blocks` - Will show blocks of HDFS
++ `hdfs dfs -cat /test.txt` - Will give content on File
+
