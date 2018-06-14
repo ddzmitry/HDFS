@@ -145,4 +145,30 @@
 + `hdfs dfs -setrep 2 /test.txt` - To set replecations on file
 + `hdfs fsck / -files -blocks` - Will show blocks of HDFS
 + `hdfs dfs -cat /test.txt` - Will give content on File
++ `hdfs dfs -tail /test.txt` - Will show end of the file
++ `hdfs dfs -count /` - Will count directories
++ `hdfs dfs -count -q /` - Will give quota
++ `hdfs dfs -count -du /` - Will give detailed report
++ `hdfs dfs -get /test.txt ./fromhdfs.txt` - Will get a file on local system
++ `hdfs dfs -get /test.txt ./fromhdfs.txt ` - Will get a file on local system
++ `mkdir -p /var/lib/hadoop-hdfs/mydir && hdfs dfs -get /test.txt /var/lib/hadoop-hdfs/mydir/hadoopget.txt` - `-p` Will create folder
++ `hdfs dfs -mkdirectory /dzmitry` - Will create directiory
++ `hdfs dfs -touchz /dzmitry/dzmitrycoolfile.txt` - Will create file
++ `hdfs dfs -test -e /filename.txt  ` - Will check if file exists
++ `hdfs dfs -test -z /filename.txt  ` - Will check if file zero length
++ `hdfs dfs -test -d /filename.txt  ` - Will check if file is directory
++ `echo ?q` - returns the last command result
++ `hdfs dfs -chmod 775 /test.txt` - will set permissons on file
 
+#### HDFS Trash
++ `hdfs dfs -rm /trash.txt` -will remove into trash 
++ `hdfs dfs -rm -skipTrash  /skiptrash.txt` - will remove without trashing it first
++ `hdfs dfs -mv /user/centos/.Trash/Current/test.txt /recovery_text.txt` - Remove file from trash
++ ` hdfs dfs -expunge` - will expunge all trash and create a checkpoint `/timestamp` folder 
+#### HDFS High Availability
+#### Enable High Availability for HDFS
++ _Avaliable via one click_ in HDFS Action settings
+> Will force zookeeper  to be installed on all of these nodes 
++ Enable High Availability Command
++ If NameNode will shut down > Fallover Controle will put the job on another nameNode(Standby)
++ `Zookeeper takes care of it` 
