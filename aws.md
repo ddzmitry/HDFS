@@ -172,3 +172,12 @@
 + Enable High Availability Command
 + If NameNode will shut down > Fallover Controle will put the job on another nameNode(Standby)
 + `Zookeeper takes care of it` 
+#### HDFS Balancer
++ Can be set on any node
++ In Scope of balancer 
++ Can be Rablanced
+#### HDFS Maintains Mode
++ Taking HDFS into blocks will go under replication mode
++Maintenance State Minimal Block Replication set replica to 1 
+#### HDFS Quota Manager
++ File quota can be set on folders top store certaine amount of files
