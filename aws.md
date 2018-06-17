@@ -1,3 +1,6 @@
+
+##### Create Pem File
++ openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
 #### Install mySQL on cloud
 + yum -y update _(update all packages)_
 + yum -y install mysql-server mysql-connector-java _(install connector and install server)_
@@ -60,6 +63,7 @@
 + you can create script that will be runned when user logges into machine
 + /etc/systemd/system/disable-thp.service
 + look `/Transparent_huge_pages.sh`
++ https://blacksaildivision.com/how-to-disable-transparent-huge-pages-on-centos
 + sudo systemctl daemon-reload
 + sudo systemctl start disable-thp
 + sudo systemctl enable disable-thp
@@ -291,13 +295,39 @@
 + once you login as that user you can do all jobs on that user folder
 + so if you run `hdfs dfs -put file.txt` -> will put it into `user/username/file.txt`
 #### Cluster Commission and Decommission
- 
-
-
-
-
-
-
-
-
++ Begin Maitance First
++ Decomission DataNote (will reduce replication)
++ End Maitaince (will take back to comissioned)
++ You can also remove from cluster (it will delete agent as well)
+#### Cluster Client Configuration
++ HDFS `->` Configurations
+#### Cloudera Host Templates
++ Define what roles will be running with particular mission
+#### Open LDAP UBUNTU
++ Lightweight Directory Access Protocol
++ Spinup ububntu 16.04
++ sudo apt-get update
++ sudo apt install slapd ldap-utils
++ systemctl status slapd *Check LDAP service status*
++ _We need to reconfigure settings_
++ sudo dpkg-reconfigure slapd
++ Change settings on appropriate
++ _Create Small App_ sudo vim /etc/ldap/ldap.conf
++ _Then You can search particular client_ `ldapsearch -x`
++ sudo apt install phpldapadmin *LDAP Interface*
++ `host/phpldapadmin`
++ `/etc/phpldapadmin/config.php`
++ check `config.php` - This settings will allow to create usergroups
+#### Open LDAP CentOS
++ Loggin in one of the workers 
++ yum -y install nss-pam-ldapd
++ authconfig-tui (GUI Interface for UI)
++ authconfig --enableldap --enablemkhomedir --ldapserver=ip-172-31-86-60.ec2.internal:389 --ldapbasedn="dc=ddzmitry,dc=com" --update
++ authconfig-tui  (check ldap auth)
++ then we can look for user `id fln1` 
++ `su username` -> `cd` -> `pwd` -> "Will Take to home directory of user"
++ Now you can create any files and add them to HDFS
++ Repeat steps of `HDFS Home Directory` for new user 
++ _AND THIS WILL WORK_ `hdfs dfs -put test.txt /user/username/test.txt`
+#### YARN 
 
