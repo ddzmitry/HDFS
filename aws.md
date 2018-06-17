@@ -181,3 +181,56 @@
 +Maintenance State Minimal Block Replication set replica to 1 
 #### HDFS Quota Manager
 + File quota can be set on folders top store certaine amount of files
++ `hdfs dfs -count -q -h -v /folder` - File Count and quota of it 
++ `hdfs fsck /folder/file` - Will show the blocks that file takes per block
++ `find .blockname` - Will show directory where folder stored at
++ `hdfs dfsadmin -setQuota 6 /testfolder` - set Quota
++ `hdfs dfsadmin -clrQuota 6 /testfolder` - clear Quota
++ `hdfs dfsadmin -setSpaceQuota 6 /testfolder` - Set Space  Quota `Allowed prefixes are k, m, g, t, p`
++ `hdfs dfsadmin -clrSpaceQuota 6 /testfolder` - Remove Space  Quota
+##### HDFS Canary Test
++ HDFS -> Canary - Specify location for long time files 
+#### HDFS Racks 
++ Make Cluster Highly avaliable
++ Defines based of the zones 
++ Increase a probability that server will still work
++ `var/run/cloudera-scm-agent/process` - Will describe all process that are going on cluster
++ `dfs/nn/current`  - Will have current logs and fsimages (passed/inProgress)
++ You can use fsimages for backing up 
++ `hdfs oiv -i fs_imagefile` - To be able to see fsImage content (Have to be on nameNode server)
++ This will open ofline session on which one you can see what files are avaliable
++ `hdfs dfs -ls webhdfs://127.0.0.1:5978/` - Will show what files were avalialble at that time _AMAZING_
++ `hdfs oiv -i fs_imagefile -p XML -o /var/lib/hadoop-hdfs/prev_files.xml` - Will dump fsimage into xml file
++ You can also see what edit logs were happening on cluster `dfs/nn/current` 
++ `hdfs oev -i edits_file -p xml -o /var/lib/hadoop-hdfs/filename_.xml`
++ Checkpoints work like backup version logs you can roll back to if something happens 
+#### Roll Testing
++ hdfs dfs -mkdir /filename
++ edit_in_progress will be updated (so you can see what is going as transaction on folder)
++ `hdfs oev -i edits_file -p xml -o /var/lib/hadoop-hdfs/filename_.xml` - to see what is there
++ Once you roll edits "Cloudera UI" will create new edits_inprogress file
++ If the edits were destroyed Cloudera can use fsimage to recover 
+####  HDFS Save Namespace
++ Create couple files 
++ HDFS `->` Action `->` Roll Edits
++ Ypu can see ofline what files were on fsimage `hdfs oiv -i fs_imagefile`
++ To do Save Namespace you have to put NameMode into Enter `Savemode`
++ in `hdfs-site` you can maintain how many checkpoints (fsimages,editlogs) will be saved
++ Save namespace will create new `fs_image`
++ from command line `hdfs dfsadmin -rollEdits` _New segment starts at txid 50879_
+#### To do Save Namespace from CMD
++ `hdfs dfsadmin -safemode enter`
++ _Cant add any files on NameNode_
++ `hdfs dfsadmin -saveNamespace`
++ `hdfs dfsadmin -safemode leave`
++ `hdfs dfsadmin -rollEdits`
+#### HDFS Snapshots 
++ Go to HDFS point to folder and Enable Snapshot
+
+
+
+
+
+
+
+
