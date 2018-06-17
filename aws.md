@@ -226,6 +226,73 @@
 + `hdfs dfsadmin -rollEdits`
 #### HDFS Snapshots 
 + Go to HDFS point to folder and Enable Snapshot
++ You can also restore from snapshot as well 
++ *with cmd*
++ `hdfs dfs -mkdir /snapshotshelltest`
++ `hdfs dfsadmin -allowSnapshot /snapshotshelltest`
++ `hdfs dfs -createSnapshot /snapshotshelltest filePath`
++ `hdfs snapshotDiff /snapshotshelltest with0files with2files` - To see differents between snapshots
++ `hdfs lsSnapshottableDir` - Will show all directories where snapshots are stored
++ Before disallowing snapshots you have to remove all previous once
++ hdfs dfs -deleteSnapshot /snapshotshelltest with2files
++ `hdfs dfsadmin -disallowSnapshot /snapshotshelltest`
+#### HDFS Snapshots Policy
++ Can be set as cron job in Baclup settings on Cloudera
++ Create snapshots for backup
+#### HDFS Edge Node
++ Usually the one node that USER uses
++ Spinup centos 7 add all configs for agent
++ Add it to Cluster
++ Go To HDFS and  assign Gateway service to it 
++ Deploy Change Configs
++ We can allow acces only to the Edge Node (That Point we protect all other nodes from running on them)
++ We use That machie for accessing HDFS
++ Create Security Configurations where all ports will be closed exept the one that is EdgeNode
+#### Web HDFS
++ To access Hadoop through  RESTApi
++ HDFS Configs `->` webhdfs
++ *Example*  `curl -i -X PUT "http://hostaddress:50070/webhdfs/v1/webhdfstest?user.name=hdfs&op=MKDIRS"`
++ *Example*  `curl -i -X PUT "http://hostaddress:50070/webhdfs/v1/test.txt?user.name=hdfs&op=CREATE"`
++ _DOCS_ https://hadoop.apache.org/docs/r1.0.4/webhdfs.html
+#### HDFS httpFS
++ Complete control on security
++ Can be added as a service on one of the hosts
++ Redeploy New settings /Restart Services
++ API will be avaliable on that host at port 14000
++ `curl "http://host:14000/webhdfs/v1/?op=LISTSTATUS&user.name=hdfs"` *get list status*
++ `curl -X PUT "http://host:14000/webhdfs/v1/httpFSTest?user.name=hdfs&op=MKDIRS" `
++ `curl -X PUT "http://host:14000/webhdfs/v1/file.txt?user.name=hdfs&op=CREATE" `
++ Creation will return cookie that will authenticate user to talk back to server
++ Also Works Great With Postman
++ Uses Proxy
+#### HDFS FSCK Utility
++ `hdfs fsck /` - To check health of the system
++ `hdfs fsck /file.txt -files -blocks -locations` - Show where and how blocks of file are stored
++ `hdfs getconf -confKey dfs.replication` - Show Replicas
++  Check Blocks Where Data is avaliable using block id `blk_1073748012`
++ `hdfs fsck / -blockId blk_1073748012` - Check Where block is located
++ `find . -name " blk_1073748012" ` - find block by name
++ if fileBlocks werte corrupted we will have to remove the file
++ `hdfs dfsadmin -triggerBlockReport ip:50020` - To trigger BlockReport
+#### HDFS Recovery
++ `hdfs namenode recovery` - will fire up recovery if any data was missing will recover from `fs_images,edits_file`
+#### HDFS Federation
++ Horizontal Scalability of NameNode
++ HDFS `->` Configurations `->` nameservice
++ adding nameservice will provide High Availability and Federations
++ Will Peovide BlockPools assigned to NameServices 
++ Each NameService will have its own NameNode and SecondaryNode
++ NameSpace will have different BlockPullID and different DataNodes but Will have same cluster ID
+#### HDFS Home Directory
++ sing up as HDFS `id username` - check if user exists
++ `hdfs dfs -mkdir /user/username` - Create Folder for user
++ `hdfs dfs -chown username:hdfs /user/username` - Give/Assign Permissions on userfolder
++ `hdfs dfs -chmod -R 700 /user/username` - Give Restrictions for folder to user *Only this user*
++ once you login as that user you can do all jobs on that user folder
++ so if you run `hdfs dfs -put file.txt` -> will put it into `user/username/file.txt`
+#### Cluster Commission and Decommission
+ 
+
 
 
 
