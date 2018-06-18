@@ -330,4 +330,55 @@
 + Repeat steps of `HDFS Home Directory` for new user 
 + _AND THIS WILL WORK_ `hdfs dfs -put test.txt /user/username/test.txt`
 #### YARN 
-
++ OS That mages resources of all systems 
++ YARN gateway submits the job
++ `hadoop jar`
++ *EXAMPLES* `cd /opt/cloudera/parcels/CDH/lib/hadoop-mapreduce`
++ ` hadoop jar hadoop-mapreduce-examples.jar pi 50 100`
++ `nohup hadoop jar hadoop-mapreduce-examples.jar pi 50 100` - will allow to run application in background
++ `sudo -u ddubarau hadoop jar /opt/cloudera/parcels/CDH/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar pi 10 100` submit job as user
++ in Cluster -> Static Service Pools -> You can assign how much memory will be allocated to Services
++ in YARN - > Configurations ->  Scheduler we can define scheduler class
++ Cluster -> Dynamic Resource Pool Configurations -> `User Limits`
++ If Changes were made you can revert them in YARN configuration -> `Revert changes` 
+##### YARN SCHEDULER
++ FIFO Scheduler (Apache Hadoop)
++ Capacity Schedule (Hortonworks)
++ *Fair Share Schedulers (Cloudera Default)* -> Based off how much capacity in the cluster
++ YARN -> Configurations -> Scheduler
+##### YARN Capacity Scheduler
++ YARN->Configurations->SCHEDULER
++ You can specify ResourceManager Default Group based of the group of users
++ Yarn-site.xml – For every container request
++ `Yarn.scheduler.minimum-allocation-mb - 1024`
++ `Yarn.scheduler.maximum-allocation-mb - 8192`
++ `Yarn.scheduler.minimum-allocation-vcores - 1`
++ `Yarn.scheduler.maximum-allocation-vcores – 32`
++ `yarn.scheduler.capacity.<queue-path>.maximum-capacity`
++ `yarn.scheduler.capacity.<queue-path>.capacity`
+##### Dynamic Resource Pool Configuration
++ Cluster -> Dynamic Resource Pool Configuration -> Placement Rules
++ Create Percentage resources based of groups 
++ Can Allocate amount the jobs that be run by user within time
++ Can change Preemption (to facilitate ability of resources )
+#### YARN Resource Manager High Availability 
++ Assign another host for process
++ Will add another Resource manager
++ Prvodide RM submit a job at the any point of the time
+#### Zookeeper 
++ Coordinator Service Within a clustr
++ Has to be at least 3 systems on 
+#### Hive 
++ Works with structured data only
++ Processes onto MR platform on top of the YARN
++ Shared by other components Like Impala
+#### Work with files 
++ `sed 's/::/#/g' movies.dat > movies.t` *Replace :: with #*
+#### Hive Shell and Beeline 
++ describe formated tablename
++ `LOAD DATA LOCAL INPATH 'occupations.t' OVERWRITE INTO TABLE occupations;`
++ `LOAD DATA INPATH 'ratings.t' OVERWRITE INTO TABLE ratings;` - Load data 
++ `hdfs dfs -put movies.t /user/hive/warehouse/movielens.db/movies/movie.t`  You can also load text data straight in table 
++ Then You can fire MR jobs
++ beeline uses connection to server where HIVE is running
++ `!connect jdbc:hive2://host:10000`
