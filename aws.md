@@ -381,4 +381,87 @@
 + `hdfs dfs -put movies.t /user/hive/warehouse/movielens.db/movies/movie.t`  You can also load text data straight in table 
 + Then You can fire MR jobs
 + beeline uses connection to server where HIVE is running
-+ `!connect jdbc:hive2://host:10000`
++ `beeline` -> `!connect jdbc:hive2://host:10000`
+#### Hive Point of Failure
++ RDBMS holding the metastore
++ Hivr Metaserver
++ HiveServer 2 
++ Zookeeper to coorinate high availability
+#### Hive HA HiveServer 2 
++ Beeline > Login _Make sure all working_
++ Cloudera > Go To Hive and add more MetastoreServices (Which will increas High Avaliability by adding thrigt servers)
++ When Adding New Hosts Make sure that Driver is here 
++ Go to that server and `yum -y install mysql-connector-java`
++ Hive Metastore Default Group can be changed (Cluster>Hive>Configuration>Search Delegation)
++ Make Hive Metastore Higlu Avaliable by adding HMS to other hosts
++ To make Hive HA you have to have Zookeeper running on each one of them
++ *TO FIND SERVICES WITHIN ZOOKEEPER*
++ `beeline -u "jdbc:hive2://ip:2181, ip2:2181, ip3:2181; serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2"`
++ So if any of hiveservers will be down you can still support connection because of zookeeper will find another one
+#### Hive WebHCat and HCatalog
++ Can be added to the host from Cluster>Hive>Instances
++ `curl -i http://host:50111/templeton/v1/status` - To check status of WebHCat Service
++ `hcat -e "create table groups123(name string,placeholder string, id int) row format delimited fields terminated by ':' stored as textfile"`
++ _hcat can also be used to describe the table and etc._ `hcat -e "desc groups123"`
++ Then you can simply can use hive or beeline to see data
+#### Apache OOzie
++ Scheduler for Hadoop
++ Runs Tomcat server to schedule jobs 
++ Workflow -> Schedule -> Bundle
+#### HUE  Hadoop USer Experience 
++ Comes in as Parcel from Cloudera
++ Need Horizontal Scalability
+#### HUE Open LDAP
++ HUE > Configurations > authentication
++ Authentication Backend -> desktop.auth.backend.LdapBackend 
++ ldap_url -> ldap://<<hostname>>:389 
++ ldap_username_pattern -> uid=<username>,ou=users,dc=username,dc=com
++ search_bind_authentication-> Select ( True ) 
++ use_start_tls -> True
++ create_users_on_logon -> True 
++ base_dn -> dc=username,dc=com 
++ bind_dn -> cn=admin,dc=username,dc=com 
++ bind_password -> Provide as per LDAP configuration 
++ user_filter -> objectClass=* 
++ user_name_attr -> uid 
++ group_filter -> objectClass=posixGroup
++ _Once All of it is done_ User WILL Login with OPEN LDAP server
++ The firstr user who logged in is going to be an administrator
+#### Extendend Controll HDFS
++ *Linux Permissions* Owner Group Other
++ Read -4 Write - 2 Execute - 1
++ `___________________` `r w x` `r - x` `r - x`
++ `___________________` `4+2+1` `4+0+1` `4+0+1`
++ `___________________`   `7`     `5`     `5`
++ `___________________`-chmod -R
+#### Properties - ACL
++ dfs.permissions.enabled = true 
++ dfs.permissions.superusergroup = supergroup 
++ dfs.namenode.acls.enabled = true
++ *Scenario!* User creates a folder and  want to have one user have permission
++ hdfs dfs -chown user:productionGroup /folder
++ _LOGIN AS OWNER OF FOLDER_
++ *!!IMPORTANT!!*
++ hdfs dfs -setfacl -m user:username:rwx /folder
++ `That mean we allow only ONE USER from group to have read,weite and execute access to the folder`
++ `hdfs dfs -getfacl /folder` - to be able to see permissions on folder
+#### ACL Options
++ -R: List ACLs recursively. 
++ -b: Revoke all permissions except the base ACLs for user, groups and others. 
++ -k: Remove the default ACL. 
++ -m: Add new permissions to the ACL. 
++ -x: Remove only the ACL specified. 
++ <acl_spec>: Comma-separated list of ACL permissions. 
++ --set: Completely replace the existing ACL. Previous ACL entries will no longer apply.
+#### Order of evaluation of ACL Entries
++ User is file owner – Owner permission bits are enforced 
++ Named user ACL entry. 
++ Member of file’s group 
++ Named group in ACL entry (Union of previous entry) 
++ If none then other permission bits are enforced
+#### Apache Sentry 
++ Enforces find grained authorization 
++ Role based authorization to data and metadata 
++ Integrates with Hive and HDFS 
++ Supports Impala and many more components 
++ Developed by Cloudera • Collection level, document level authorization could be provided
