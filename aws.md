@@ -464,4 +464,90 @@
 + Role based authorization to data and metadata 
 + Integrates with Hive and HDFS 
 + Supports Impala and many more components 
-+ Developed by Cloudera • Collection level, document level authorization could be provided
++ Developed by Cloudera 
++ Collection level, document level authorization could be provided
++ _HIVE > SENTRY > Enable Sentry_
+#### Cloudera Manager – OpenLDAP Integration
++ Authentication Backend Order → External Then Database 
++ LDAP url ldap://<OpenLDAP hostname>:389 
++ LDAP bind user dn → cn=admin,dc=companyName,dc=com 
++ ldap bind password 
++ ldap user search filter → (uid={0}) 
++ ldap user search base → ou=clouderausers, dc=companyName,dc=com 
++ ldap group search filter  → objectClass=posixGroup 
++ group search base→ ou=clouderausers,dc=companyName,dc=com 
++ ldap distinguished name pattern → uid={0},ou=clouderausers,dc=companyName,dc=com
++ *MAKE SURE THAT GROUP CLOUDERA EXISTS ON LDAP SERVER* 
+### Impala 
++ Distributed Massive Parallel Processing (MPP) database Engine
++ Impala good to query any data because it does it in parallel
++ Hive uses MR jobs
+
+#### Kerberos Introduction
++ Network authentication protocol 
++ Works based on tickets and key exchange mechanism 
++ Provides strong security on a non secure network 
++ Developed by MIT 
++ Only provides protocol. 
++ Should be integrated with external LDAP Servers like AD or OpenLDAP
++ For each service is separated ticket
++ INSTALLATION
++ In one of the hosts `yum -y install krb5-server krb5-libs krb5-workstation`
++ In all other boxes install `yum -y install krb5-libs krb5-workstation`
++ On host with server `vim /etc/krb5.conf` - change config 
++ `vim /var/kerberos/krb5kdc/kadm5.acl` - change on proper DOMAIN.COM
++ `kdb5_util create -s ` - create database
++ Database will be stored `var/kerberos/krb5kdc/principal`
++ `service krb5kdc restart` - to start the service
++ as admin we need to restart services `service kadmin restart`
++ `chkconfig krb5kdc on` - make sure service starts every time when server runs 
++ `chkconfig kadmin on` - kerberos admin to be started
++ `kadmin.local -q "addprinc user/admin"` - add principle 
++ `kadmin -p admin/admin@DZMITRY.com` - log in as kerberos admin
++ *IN kadmin console*
++ `listprincs` - list all principals
++ `addprinc testuser`
++ _MAX LIFE OF TICKET IS 90 DAYS_
++ `modprinc -maxrenewlife 90days krbtgt/DDZMITRY.COM@DDZMITRY.COM` -set the ticket
++ _IN CLOUDERA_
++ Cloudera -> Administration -> Enable Kerberos
++ After all install Keytab will be set for each principal (hue,hdfs...etc)
++ go to server cd /var/run/cloudera-scm-agent/process
++ go under latest process with NAMENODE where Keytab will be avaliable
++ `cp hdfs.keytab /home/users/username`
++ `chown user /home/users/username/hdfs.keytab`
++ `kinit hdfs.keytab` - to connect to hostname using keytab to have access to HDFS
++ `kdestroy` - to destroy connections 
++ to see what roles are avaliable with keytab `klist -kt hdfs.keytab`
++ BUT IT IS NOT ADVISED TO USE SERVICE TICKET
++ you can give that ticket to another user or create dedicated per user
++ to create dedicated ticket for user 
++ `kadmin -p admin/admin@DZMITRY.com` - log in as kerberos admin
++  kadmin add user 
++  login as user
++  `kinit` and you can check `klist`
+#### Sqoop
++ add db to mysql `mysql -u root -h localhost -p <employees.sql` 
++ MAKE SURE sqoop user exists and has access to all dbs
++ connect to mysql db `sqoop list-databases --connect jdbc:mysql://ip.com:3306/ --username sqoop -P`
++ connect to database ans see table `sqoop list-tables --connect jdbc:mysql://ip.com:3306/databaseName --username sqoop -password password`
++ import data from mysql to hdfs `sqoop import-all-tables --connect jdbc:mysql://ip.com:3306/tablemane --username sqoop -P 
+--warehouse-dir  hdfs://host:8020/user/sqoop/test/empall -m 1`
++ `-m 1` means load data sequentially one after another
++ sqoop can do sequentially
++ `sqoop import --connect jdbc:mysql://host:3306/employees --username sqoop  -P --table employees --hive-table employeehive --create-hive-table --hive-import --target-dir  hdfs://host:8020/user/sqoop/test/emplhive`
++ Can be done in hbas as well column -> key -> value
+#### HBASE 
++ Distributed Column oriented NoSQL Database 
++ Works on top of HDFS 
++ Similar to Google’s big table 
++ Data exists as key value pair. 
++ Group of key value pair together exists as column family 
++ N number of key value pair makes a row. 
++ Rowid, column family, key makes unique combination of any cell 
++ Works on master worker architectur
+#### Flume uses Stream Data 
++ Higly Scalable 
++ Works of an agent Source -> Channel -> Sink
++ Channel acts like a buffer 
++ tail -f 'will constantly track changes'
